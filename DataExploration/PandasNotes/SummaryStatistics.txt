@@ -1,3 +1,0 @@
-http://www.datasciencemadesimple.com/descriptive-summary-statistics-python-pandas/
-
-.describe() :D

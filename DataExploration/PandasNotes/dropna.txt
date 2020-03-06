@@ -1,2 +1,0 @@
-The below line drops all 
-dropna(subset=[‘modelLine’])

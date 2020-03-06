@@ -1,3 +1,0 @@
-data.columns
-
-how to display ALL columns (not truncated)
