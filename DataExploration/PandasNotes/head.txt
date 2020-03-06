@@ -1,0 +1,2 @@
+df.head(2)
+prints out the first two lines and all of the columns
