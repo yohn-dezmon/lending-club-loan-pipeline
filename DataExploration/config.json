@@ -1,3 +1,5 @@
 {
-    "pathToInput":"/Users/HomeFolder/projects/LoanCodingChallenge/lending-club-loan-data/loan.csv"
+    "pathToInput":"/Users/HomeFolder/projects/LoanCodingChallenge/lending-club-loan-data/loan.csv",
+    "dataDict":"/Users/HomeFolder/projects/LoanCodingChallenge/lending-club-loan-data/LCDataDictionary.xlsx"
+
 }
