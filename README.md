@@ -119,7 +119,8 @@ where 1 denotes the master, and 2 and 3 would be used to access the worker nodes
 
 ### Installing technologies:
 
-Now let's install the required technologies:
+Now let's install the required technologies (all peg commands are to be run
+from your local computer):
 
 ```
 $ peg install spark_loan hadoop
