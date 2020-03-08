@@ -38,6 +38,7 @@ sub page and click "Create Security Group".
 Initially just open the SSH connection to both security groups.
 
 Modify the in-bound rules for the Spark Cluster security group as follows:
+**Source is left blank as it will be specific to your AWS account**
 
 | Type | Source | Description |
 |-----------|---------|----------------|
@@ -69,19 +70,49 @@ And the outbound rules as follows:
 
 To create the clusters I downloaded the [Pegasus](https://github.com/InsightDataScience/pegasus) package from Insight and followed the instructions found on the readme. Please clone pegasus onto your local computer and follow the instructions for setting up the AWS command line tool and peg command line tool.
 
-After installing pegasus, I created one cluster called 'kafka' consisting of three nodes. This assumes you have already set up security groups, subnets and a VPC on your AWS account.
-Below is the .yml file I used by calling peg up kafka3.yml
-
+After installing pegasus, navigate to the directory: pegasus/examples/spark
+and modify the master.yml file to create a master node for a cluster
+called 'spark_loan' with your own subnet_id, keypair, and security group id:
 
 ```
 purchase_type: on_demand
 subnet_id: <subnet_id>
-num_instances: <num_of_instances>
+num_instances: 1
 key_name: <keypair_filename>
-security_group_ids: <security_group_ids>
+security_group_ids: <spark-security-group>
 instance_type: m4.large
-tag_name: <cluster_name>
+tag_name: spark_loan
 vol_size: 100
 role: master
 use_eips: true
 ```
+Similarly modify the workers.yml file, and set the num_instances to 2.
+
+Once you have modified these files, you can create your EC2 instances by
+running the following commands:
+
+```
+$ peg up master.yml
+$ peg up wokers.yml
+```
+
+Once they are created, run the following to be able to access them from
+your local computer.
+
+```
+$ peg fetch spark_loan
+```
+
+The EC2 instances should now all be running, but incase they aren't:
+
+```
+$ peg start spark_loan
+```
+
+Now you can SSH into either the master or the worker like so:
+
+```
+$ peg ssh spark_loan 1
+```
+
+where 1 denotes the master, and 2 and 3 would be used to access the worker nodes.
