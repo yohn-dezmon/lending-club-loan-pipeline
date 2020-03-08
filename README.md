@@ -37,8 +37,8 @@ Go to the EC2 page on the AWS console, navigate to the security groups
 sub page and click "Create Security Group".
 Initially just open the SSH connection to both security groups.
 
-Modify the in-bound rules for the Spark Cluster security group as follows:
-**Source is left blank as it will be specific to your AWS account**
+Modify the in-bound rules for the Spark Cluster security group as follows:  
+[**Source is left blank as it will be specific to your AWS account**]
 
 | Type | Source | Description |
 |-----------|---------|----------------|
@@ -66,7 +66,7 @@ And the outbound rules as follows:
 
 
 
-### Creating clusters
+### Creating EC2 Instances:
 
 To create the clusters I downloaded the [Pegasus](https://github.com/InsightDataScience/pegasus) package from Insight and followed the instructions found on the readme. Please clone pegasus onto your local computer and follow the instructions for setting up the AWS command line tool and peg command line tool.
 
@@ -109,10 +109,35 @@ The EC2 instances should now all be running, but incase they aren't:
 $ peg start spark_loan
 ```
 
-Now you can SSH into either the master or the worker like so:
+Now you can SSH into either the master or the worker nodes like so:
 
 ```
 $ peg ssh spark_loan 1
 ```
 
 where 1 denotes the master, and 2 and 3 would be used to access the worker nodes.
+
+### Installing technologies:
+
+Now let's install the required technologies:
+
+```
+$ peg install spark_loan hadoop
+$ peg install spark_loan spark
+```
+
+To start running the technologies:
+
+```
+$ peg service spark_loan hadoop start
+$ peg service spark_loan spark start
+```
+
+### Shutting down EC2 instances:
+
+Before shutting down your EC2 instances, make sure you stop all services:
+
+```
+$ peg service spark_loan hadoop stop
+$ peg service spark_loan spark stop
+```
