@@ -16,6 +16,7 @@ import sun.jvm.hotspot.gc_implementation.g1.G1Allocator;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,16 +24,12 @@ public class S3toJava {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
-        // The bucket name for s3 is stored in private.properties which is not uploaded to the github repo
-        String basePath = new File("").getAbsolutePath();
-        String pathToProps = basePath+"/private.properties";
-        Properties props2 = new Properties();
-        FileInputStream fis = new FileInputStream(pathToProps);
-        props2.load(fis);
-        String accessKey = props2.getProperty("accessKey");
-        String secretKey = props2.getProperty("secretKey");
-        String bucketName = props2.getProperty("bucketName");
-        String loanKey = props2.getProperty("loanKey");
+        CommonMethods cm = new CommonMethods();
+        HashMap<String,String> mapOfProps = cm.getPropStrs();
+        String accessKey = mapOfProps.get("accessKey");
+        String secretKey = mapOfProps.get("secretKey");
+        String bucketName = mapOfProps.get("bucketName");
+        String loanKey = mapOfProps.get("loanKey");
 
         // passing in AWS credentials
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);

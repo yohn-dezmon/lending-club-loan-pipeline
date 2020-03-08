@@ -4,6 +4,7 @@
 
 1. [Purpose](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#purpose)
 2. [AWS Setup](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#aws-setup)
+3. [Connecting to S3](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#connecting-to-s3)
 
 
 ## Purpose:
@@ -141,4 +142,15 @@ Before shutting down your EC2 instances, make sure you stop all services:
 ```
 $ peg service spark_loan hadoop stop
 $ peg service spark_loan spark stop
+```
+
+## Connecting to S3 from Spark:
+
+Go to the spark-default.conf file within the /usr/local/spark/conf directory
+on your EC2 instances, and add the following lines with your AWS credentials:
+
+```
+spark.hadoop.fs.s3a.access.key <access-key>
+spark.hadoop.fs.s3a.secret.key <secret-key>
+spark.hadoop.fs.s3a.impl org.apache.hadoop.fs.s3a.S3AFileSystem
 ```
