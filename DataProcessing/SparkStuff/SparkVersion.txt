@@ -1,4 +1,0 @@
-$ spark-submit --version
-version 2.4.4
-Using Scala version 2.11.12, Java HotSpot(TM) 64-Bit Server VM, 9.0.4
-Branch

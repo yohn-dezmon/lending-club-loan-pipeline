@@ -1,4 +1,0 @@
-https://www.baeldung.com/aws-s3-java
-
-
-https://www.youtube.com/watch?v=iQrOmbCiFBs
