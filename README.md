@@ -26,7 +26,7 @@ One of my main assumptions was that I didn't want to throw away any data in case
 I chose to use a jupyter notebook to do the exploration/visualization because of its ability to visualize
 the data and graphs (with matplotlib/seaborn) while you are writing the code. For the data exploration
 portion of this project, I accessed the loan.csv and LCDataDictionary.xlsx files locally, and
-accessed their paths by using a configuration file: config.json (which is hidden with .gitignore).
+accessed their paths by using a configuration file: DataExploration/config.json.
 
 To explore the dataset I observed various features. To begin I started by printing the
 columns in both the data dictionary and the dataset itself, and by reading the meaning of
