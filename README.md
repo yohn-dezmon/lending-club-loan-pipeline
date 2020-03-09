@@ -15,6 +15,17 @@ and store this data on a periodic basis to be placed into storage such that it c
 
 ## Data Exploration:
 
+### Assumptions:
+
+One of my main assumptions was that I didn't want to throw away any data in case it was of use to analysts further down the pipeline. Thus my aim in exploration was to characterize the data and understand where there may be problematic data.
+
+### Jupyter Notebook:
+
+***DataExploration/loan_data_exploration.ipynb***
+
+I chose to use a jupyter notebook to do the exploration/visualization because of its ability to visualize
+the data and graphs (with matplotlib/seaborn) while you are writing the code.
+
 To explore the dataset I observed various features. To begin I started by printing the
 columns in both the data dictionary and the dataset itself, and by reading the meaning of
 each of the 145 columns. From there I observed the shape of the data dictionary and
@@ -28,14 +39,40 @@ like Amazon Redshift.
 
 ## Main Findings:
 
-Some of the columns had >90% null values, when placed into a database, these could be kept in a 
+Some of the columns had >90% null values, when placed into a database, these could be kept in a separate table
+if the member_id was given. These columns can be seen in my jupyter notebook.
 
+The majority of the columns were numerical, but there was a significant subset of textual data.
+If given more time I would have considered converting this data into one-hot encoding so that
+machine learning applications could easily use the categorical data for their algorithms.
 
+## Data Visualization:
+
+![Loan Amount Cumulative Sum](ScreenShots/LoanAmtCumSum.png)
+
+Here we can see that the cumulative sum of loans given to borrowers on the platform is increasing
+exponentially with time.
 
 ## Data Processing:
 
+**DataProcessing/loan_processor.py**
+
 I initially planned to use Apache Spark with Java on a 3 Node EC2 cluster to complete the data processing, however I ran into issues regarding dependency management and ran out of time to troubleshoot them.
+I also tried out PySpark and found it to be similar to the Java spark applications I've run in the past,
+however I also ran into issues when attempting to run the PySpark application on my EC2 instance.
+
 Thus I decided ultimately to complete the processing using pandas in Python. To see the instructions I wrote on how to set up the AWS computing cluster, please see my commits prior to the commit "updated readme to plain python".
+
+What I was able to get done was to import the data from s3, and to do some checking to ensure that
+the columns were of the right type.
+
+
+### S3 to pandas:
+I was able to extract the csv and data dictionary from s3 and read them into pandas dataframes
+where I planned to do data validation and aggregation.
+If I were to implement a autonomous pipeline I would have used Airflow to read the
+data from s3 into load_processor.py every time a new file was placed into the s3 bucket.
+
 
 
 ## Redshift setup:
@@ -51,3 +88,17 @@ inbound rules as follows:
 |-----------|---------|----------------|
 | Redshift | <local-ip> | local-ip |
 | All traffic | <spark-security-group> | self |
+
+With more time I would included methods within my loan_processor.py module to
+write one large table in Redshift. Additionally I would have done some aggregations
+on the data and stored those aggregations in separate tables.
+
+## Aggregations:
+
+Some of the ideas I had for aggregations consist of the following:
+
+1. How many people defaulted in a particular month?
+2. Which professions have the most over-due loans?
+3. Loan amount by status
+4. Loan amount by co-borrower vs. single borrowers
+5. Number of loans by state
