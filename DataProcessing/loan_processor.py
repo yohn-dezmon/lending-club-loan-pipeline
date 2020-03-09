@@ -12,22 +12,22 @@ class LoanProcessor(object):
 
     def get_config_data(self):
         """Get configuration data for s3 and AWS"""
-        with open('config.json') as json_data_file:
-
-            try:
-            # a dictionary
-                configs = json.load(json_data_file)
-                return configs
-            except json.JSONDecodeError as jsonerr:
-                print(jsonerr)
+        try:
+            with open('config.json') as json_data_file:
+                try:
+                    # individual configs can be accessed like, configs['key']
+                    configs = json.load(json_data_file)
+                    return configs
+                except json.JSONDecodeError as jsonerr:
+                    print(jsonerr)
+        except FileNotFoundError as fnf_error:
+            print("fnf error: "+str(fnf_error))
 
 
     def datadict_from_s3(self, configs):
-        """Method to write data_dict to s3 as a csv file
-        for later ingestion into PySpark.
+        """Method to import datadict into a pandas dataframe.
         """
         # access content of excel file with Body keyword, convert to pandas df
-        '''TODO: SET UP A TRY CATCH BLOCK FOR WHEN FILE IS NOT EXCEL '''
 
         try:
             df = pd.read_excel("s3a://%s" % (configs['dictURL']), index=False)
@@ -39,19 +39,43 @@ class LoanProcessor(object):
         except TypeError as bads3path:
             """ When an incorrect path is given. """
             print("bad s3 path: "+str(nonerr))
-        print(df.head())
+        else:
+            print(df.head())
+            return df
 
+    def import_loan_dataset_s3(self, configs):
+        """Method to import loan.csv dataset"""
+        try:
+            df = pd.read_csv("s3a://%s" % (configs['loanURL']), index=False)
 
+        except TypeError as bads3path:
+            """ When an incorrect path is given. """
+            print("bad s3 path: "+str(nonerr))
+        else:
+            print(df.head())
 
+            shape = df.shape
+            if shape[1] != 145:
+                print("Incorrect number of columns")
+
+            return df
+
+    """
+    This code was used to test connection to s3 using boto3
     def connect_to_s3(self):
         s3 = boto3.resource('s3')
         for bucket in s3.buckets.all():
             print(bucket.name)
+    """
 
     def main(self):
         self.connect_to_s3()
         configs = self.get_config_data()
-        self.datadict_from_s3(configs)
+        data_dict_df = self.datadict_from_s3(configs)
+        loan_df = self.
+
+
+
 
 
 
