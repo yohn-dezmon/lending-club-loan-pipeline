@@ -5,3 +5,5 @@ loanspark.jar
 .project
 private.properties
 .settings/
+config.json
+PySpark/config.json

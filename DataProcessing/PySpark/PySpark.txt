@@ -1,0 +1,44 @@
+PySpark tutorial:
+
+class pyspark.SparkContext (
+   master = None,
+   appName = None,
+   sparkHome = None,
+   pyFiles = None,
+   environment = None,
+   batchSize = 0,
+   serializer = PickleSerializer(),
+   conf = None,
+   gateway = None,
+   jsc = None,
+   profiler_cls = <class 'pyspark.profiler.BasicProfiler'>
+)
+
+https://www.tutorialspoint.com/pyspark/pyspark_sparkcontext.htm
+
+Master − It is the URL of the cluster it connects to.
+
+appName − Name of your job.
+
+sparkHome − Spark installation directory.
+
+pyFiles − The .zip or .py files to send to the cluster and add to the PYTHONPATH.
+
+Environment − Worker nodes environment variables.
+
+batchSize − The number of Python objects represented as a single Java object. Set 1 to disable batching, 0 to automatically choose the batch size based on object sizes, or -1 to use an unlimited batch size.
+
+Serializer − RDD serializer.
+
+Conf − An object of L{SparkConf} to set all the Spark properties.
+
+Gateway − Use an existing gateway and JVM, otherwise initializing a new JVM.
+
+JSC − The JavaSparkContext instance.
+
+profiler_cls − A class of custom Profiler used to do profiling (the default is pyspark.profiler.BasicProfiler).
+
+Among the above parameters, master and appname are mostly used. The first two lines of any PySpark program looks as shown below −
+
+
+Spark automatically creates the SparkContext object named sc, when PySpark shell starts.
