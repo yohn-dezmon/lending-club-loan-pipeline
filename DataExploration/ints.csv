@@ -1,0 +1,4 @@
+loan_amnt,int64
+funded_amnt,int64
+revol_bal,int64
+policy_code,int64

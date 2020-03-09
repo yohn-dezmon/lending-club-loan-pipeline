@@ -3,6 +3,7 @@ import numpy as np
 import boto3 # to connect to s3
 import json
 import xlrd
+from collections import defaultdict
 
 
 class LoanProcessor(object):
@@ -43,10 +44,55 @@ class LoanProcessor(object):
             print(df.head())
             return df
 
-    def import_loan_dataset_s3(self, configs):
+    def loan_chunk_process(self, loan_chunk):
+        """Process each chunk of 500000 rows"""
+
+        blnklist = []
+
+        shape = df.shape
+        if shape[1] != 145:
+            print("Incorrect number of columns")
+
+        # Type Checking
+
+        map = defaultdict(list)
+        # loan_chunk.dtypes is a Series
+        for typ,index in loan_chunk.dtypes.items():
+            map[str(typ)].append(index)
+
+        floatsDf = pd.read_csv("DataExploration/floats.csv")
+        list_of_floats = floatsDf.index.tolist()
+        print(list_of_floats)
+        intsDf = pd.read_csv("DataExploration/ints.csv")
+        testDf = pd.read_csv("DataExploration/text.csv")
+
+        return blnklist
+
+        # for key in map:
+        #     if
+
+
+
+        # split data into important and less important chunks
+
+
+
+
+
+    def loan_dataset_s3(self, configs):
         """Method to import loan.csv dataset"""
+        loan_chunk_list = []
         try:
-            df = pd.read_csv("s3a://%s" % (configs['loanURL']), index=False)
+            # read data into df as pandas chunk object of 500000 rows
+            loan_chunk = pd.read_csv("s3a://%s" % (configs['loanURL']), index=False
+                            chunksize=500000)
+
+            processed_chunk = self.loan_chunk_process(loan_chunk)
+
+            loan_chunk_list.append(loan_chunk_list)
+
+            concatenated_chunks = pd.concat(loan_chunk_list)
+
 
         except TypeError as bads3path:
             """ When an incorrect path is given. """
@@ -54,11 +100,14 @@ class LoanProcessor(object):
         else:
             print(df.head())
 
-            shape = df.shape
-            if shape[1] != 145:
-                print("Incorrect number of columns")
+            return concatenated_chunks
 
-            return df
+
+
+    def split_date_column(self, configs):
+        """ Method to split issued date column into year and
+        month columns"""
+        pass
 
     """
     This code was used to test connection to s3 using boto3
@@ -71,8 +120,10 @@ class LoanProcessor(object):
     def main(self):
         self.connect_to_s3()
         configs = self.get_config_data()
+        # get data dictionary and loan dataset
         data_dict_df = self.datadict_from_s3(configs)
-        loan_df = self.
+        loan_df = self.loan_dataset_s3(configs)
+
 
 
 
