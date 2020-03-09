@@ -7,3 +7,6 @@ private.properties
 .settings/
 config.json
 PySpark/config.json
+config.json
+LCDataDictionary.xlsx
+test.csv

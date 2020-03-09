@@ -16,11 +16,6 @@ class LoanProcessor(object):
         with open('config.json') as json_data_file:
             # a dictionary
             configs = json.load(json_data_file)
-            # bucketName = configs['bucketName']
-            # # this is a csv file
-            # loanKey = configs['loanKey']
-            # # this is an excel file
-            # dataDictKey = configs['dataDictKey']
 
             return configs
 
