@@ -5,6 +5,7 @@ import json
 import xlrd
 import os
 from collections import defaultdict
+# import pdb
 
 
 class LoanProcessor(object):
@@ -29,7 +30,7 @@ class LoanProcessor(object):
     def datadict_from_s3(self, configs):
         """Method to import datadict into a pandas dataframe.
         """
-        # access content of excel file with Body keyword, convert to pandas df
+
 
         try:
             df = pd.read_excel("s3a://%s" % (configs['dictURL']))
@@ -50,7 +51,8 @@ class LoanProcessor(object):
 
         blnklist = []
 
-        shape = df.shape
+        # check the chunk to see if it has the correct number of columns
+        shape = loan_chunk.shape
         if shape[1] != 145:
             print("Incorrect number of columns")
 
@@ -58,17 +60,19 @@ class LoanProcessor(object):
 
         map = defaultdict(list)
         # loan_chunk.dtypes is a Series
-        for typ,index in loan_chunk.dtypes.items():
+        for index,typ in loan_chunk.dtypes.items():
             map[str(typ)].append(index)
 
+        # pdb.set_trace()
         for key in map:
             for column in map[key]:
                 if column not in mapOfTypes[key]:
                     print(f"Data type mismatch or new column: {column},{key}")
 
+
         # split data into important and less important chunks
 
-        return blnklist
+        return loan_chunk
 
 
     def get_lists_of_types(self):
@@ -84,7 +88,9 @@ class LoanProcessor(object):
         intsDf = pd.read_csv(f"{parentPath}/DataExploration/ints.csv", names=['cols','vals'])
         set_of_ints = set(intsDf['cols'])
         textDf = pd.read_csv(f"{parentPath}/DataExploration/text.csv", names=['cols','vals'])
-        set_of_ints = set(intsDf['cols'])
+        set_of_text = set(textDf['cols'])
+
+        mapOfTypes = {}
 
         mapOfTypes['float64'] = set_of_floats
         mapOfTypes['int64'] = set_of_ints
@@ -92,28 +98,21 @@ class LoanProcessor(object):
         return mapOfTypes
 
 
-    def loan_dataset_s3(self, configs):
+    def loan_dataset_s3(self, configs, mapOfTypes):
         """Method to import loan.csv dataset"""
         loan_chunk_list = []
         try:
             # read data into df as pandas chunk object of 500000 rows
-            loan_chunk = pd.read_csv("s3a://%s" % (configs['loanURL']),
-                                    chunksize=500000)
-
-            processed_chunk = self.loan_chunk_process(loan_chunk)
-
-            loan_chunk_list.append(loan_chunk_list)
-
-            concatenated_chunks = pd.concat(loan_chunk_list)
+            loan_large_csv = pd.read_csv("s3a://%s" % (configs['loanURL']))
 
 
         except TypeError as bads3path:
             """ When an incorrect path is given. """
             print("bad s3 path: "+str(bads3path))
         else:
-            print(df.head())
+            print(loan_large_csv.head())
+            return loan_large_csv
 
-            return concatenated_chunks
 
 
 
@@ -131,12 +130,11 @@ class LoanProcessor(object):
     """
 
     def main(self):
-        self.get_lists_of_types()
-
-        """configs = self.get_config_data()
+        mapOfTypes = self.get_lists_of_types()
+        configs = self.get_config_data()
         # get data dictionary and loan dataset
         data_dict_df = self.datadict_from_s3(configs)
-        loan_df = self.loan_dataset_s3(configs)"""
+        loan_df = self.loan_dataset_s3(configs, mapOfTypes)
 
 
 

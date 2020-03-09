@@ -3,8 +3,9 @@
 ## Table of Contents
 
 1. [Purpose](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#purpose)
-2. [AWS Setup](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#aws-setup)
-3. [Connecting to S3](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#connecting-to-s3)
+2. [Data Exploration](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#data-exploration)
+3. [Data Processing](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#data-processing)
+4. [Redshift Setup](https://github.com/github.com/yohn-dezmon/lending-club-loan-pipeline#redshift-setup)
 
 
 ## Purpose:
@@ -14,12 +15,13 @@ and store this data on a periodic basis to be placed into storage such that it c
 
 ## Data Exploration:
 
+To explore the dataset I observed various features. To begin
 
 ## Data Processing:
 
 I initially planned to use Apache Spark with Java on a 3 Node EC2 cluster to complete the data processing, however I ran into issues regarding dependency management and ran out of
 time to troubleshoot them.
-Thus I decided ultimately to complete the processing using pandas in Python. To see the instructions I wrote on how to set up the AWS computing cluster, please see my commits prior to commit "updated readme to plain python". 
+Thus I decided ultimately to complete the processing using pandas in Python. To see the instructions I wrote on how to set up the AWS computing cluster, please see my commits prior to the commit "updated readme to plain python".
 
 
 ## Redshift setup:
