@@ -37,6 +37,7 @@ PostgreSQL, however after realizing that there was no unique id, I decided that 
 make more sense to store the entire dataset in a single table in a NoSQL/Columnar database
 like Amazon Redshift.
 
+
 ## Main Findings:
 
 Some of the columns had >90% null values, when placed into a database, these could be kept in a separate table
@@ -74,6 +75,10 @@ If I were to implement a autonomous pipeline I would have used Airflow to read t
 data from s3 into load_processor.py every time a new file was placed into the s3 bucket.
 
 
+### Python Dependencies:
+
+A list of all of the python dependencies I used to complete this project can be found in the
+requirements.txt file within the main directory of this repository.
 
 ## Redshift setup:
 
