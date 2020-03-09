@@ -15,12 +15,26 @@ and store this data on a periodic basis to be placed into storage such that it c
 
 ## Data Exploration:
 
-To explore the dataset I observed various features. To begin
+To explore the dataset I observed various features. To begin I started by printing the
+columns in both the data dictionary and the dataset itself, and by reading the meaning of
+each of the 145 columns. From there I observed the shape of the data dictionary and
+the dataset, and found that there were several columns present in the data dictionary
+
+One of my first observations was that the id and member_id columns were null. I was initially
+planning to normalize the dataset into a relational model within a relational database like
+PostgreSQL, however after realizing that there was no unique id, I decided that it would
+make more sense to store the entire dataset in a single table in a NoSQL/Columnar database
+like Amazon Redshift.
+
+## Main Findings:
+
+Some of the columns had >90% null values, when placed into a database, these could be kept in a 
+
+
 
 ## Data Processing:
 
-I initially planned to use Apache Spark with Java on a 3 Node EC2 cluster to complete the data processing, however I ran into issues regarding dependency management and ran out of
-time to troubleshoot them.
+I initially planned to use Apache Spark with Java on a 3 Node EC2 cluster to complete the data processing, however I ran into issues regarding dependency management and ran out of time to troubleshoot them.
 Thus I decided ultimately to complete the processing using pandas in Python. To see the instructions I wrote on how to set up the AWS computing cluster, please see my commits prior to the commit "updated readme to plain python".
 
 
