@@ -3,6 +3,7 @@ import numpy as np
 import boto3 # to connect to s3
 import json
 import xlrd
+import os
 from collections import defaultdict
 
 
@@ -31,7 +32,7 @@ class LoanProcessor(object):
         # access content of excel file with Body keyword, convert to pandas df
 
         try:
-            df = pd.read_excel("s3a://%s" % (configs['dictURL']), index=False)
+            df = pd.read_excel("s3a://%s" % (configs['dictURL']))
         except xlrd.XLRDError as xlrderr:
             """This error returns when the file is not an excel file. """
             print("xlrderr: "+str(xlrderr))
@@ -44,7 +45,7 @@ class LoanProcessor(object):
             print(df.head())
             return df
 
-    def loan_chunk_process(self, loan_chunk):
+    def loan_chunk_process(self, loan_chunk, mapOfTypes):
         """Process each chunk of 500000 rows"""
 
         blnklist = []
@@ -60,23 +61,35 @@ class LoanProcessor(object):
         for typ,index in loan_chunk.dtypes.items():
             map[str(typ)].append(index)
 
-        floatsDf = pd.read_csv("DataExploration/floats.csv")
-        list_of_floats = floatsDf.index.tolist()
-        print(list_of_floats)
-        intsDf = pd.read_csv("DataExploration/ints.csv")
-        testDf = pd.read_csv("DataExploration/text.csv")
-
-        return blnklist
-
-        # for key in map:
-        #     if
-
-
+        for key in map:
+            for column in map[key]:
+                if column not in mapOfTypes[key]:
+                    print(f"Data type mismatch or new column: {column},{key}")
 
         # split data into important and less important chunks
 
+        return blnklist
 
 
+    def get_lists_of_types(self):
+        """ Get sets of columns for each type for type checkingn for future
+        dataset ingestion"""
+
+        absPath = os.path.abspath(__file__)
+        srcPath = os.path.dirname(absPath)
+        parentPath = os.path.dirname(srcPath)
+
+        floatsDf = pd.read_csv(f"{parentPath}/DataExploration/floats.csv", names=['cols','vals'])
+        set_of_floats = set(floatsDf['cols'])
+        intsDf = pd.read_csv(f"{parentPath}/DataExploration/ints.csv", names=['cols','vals'])
+        set_of_ints = set(intsDf['cols'])
+        textDf = pd.read_csv(f"{parentPath}/DataExploration/text.csv", names=['cols','vals'])
+        set_of_ints = set(intsDf['cols'])
+
+        mapOfTypes['float64'] = set_of_floats
+        mapOfTypes['int64'] = set_of_ints
+        mapOfTypes['object'] = set_of_text
+        return mapOfTypes
 
 
     def loan_dataset_s3(self, configs):
@@ -84,8 +97,8 @@ class LoanProcessor(object):
         loan_chunk_list = []
         try:
             # read data into df as pandas chunk object of 500000 rows
-            loan_chunk = pd.read_csv("s3a://%s" % (configs['loanURL']), index=False
-                            chunksize=500000)
+            loan_chunk = pd.read_csv("s3a://%s" % (configs['loanURL']),
+                                    chunksize=500000)
 
             processed_chunk = self.loan_chunk_process(loan_chunk)
 
@@ -96,7 +109,7 @@ class LoanProcessor(object):
 
         except TypeError as bads3path:
             """ When an incorrect path is given. """
-            print("bad s3 path: "+str(nonerr))
+            print("bad s3 path: "+str(bads3path))
         else:
             print(df.head())
 
@@ -118,11 +131,12 @@ class LoanProcessor(object):
     """
 
     def main(self):
-        self.connect_to_s3()
-        configs = self.get_config_data()
+        self.get_lists_of_types()
+
+        """configs = self.get_config_data()
         # get data dictionary and loan dataset
         data_dict_df = self.datadict_from_s3(configs)
-        loan_df = self.loan_dataset_s3(configs)
+        loan_df = self.loan_dataset_s3(configs)"""
 
 
 
