@@ -24,7 +24,9 @@ One of my main assumptions was that I didn't want to throw away any data in case
 ***DataExploration/loan_data_exploration.ipynb***
 
 I chose to use a jupyter notebook to do the exploration/visualization because of its ability to visualize
-the data and graphs (with matplotlib/seaborn) while you are writing the code.
+the data and graphs (with matplotlib/seaborn) while you are writing the code. For the data exploration
+portion of this project, I accessed the loan.csv and LCDataDictionary.xlsx files locally, and
+accessed their paths by using a configuration file: config.json (which is hidden with .gitignore).
 
 To explore the dataset I observed various features. To begin I started by printing the
 columns in both the data dictionary and the dataset itself, and by reading the meaning of
@@ -60,6 +62,10 @@ exponentially with time.
 
 **DataProcessing/loan_processor.py**
 
+I would have liked to do the data processing in Apache Spark. The reason why I would prefer to use
+Spark over a python file is that Spark allows for distributed computation, and this way the current
+process could scale with the growing amount of users on the Lending Club platform.
+
 I initially planned to use Apache Spark with Java on a 3 Node EC2 cluster to complete the data processing, however I ran into issues regarding dependency management and ran out of time to troubleshoot them.
 I also tried out PySpark and found it to be similar to the Java spark applications I've run in the past,
 however I also ran into issues when attempting to run the PySpark application on my EC2 instance.
@@ -67,10 +73,15 @@ however I also ran into issues when attempting to run the PySpark application on
 Thus I decided ultimately to complete the processing using pandas in Python. To see the instructions I wrote on how to set up the AWS computing cluster, **please see my commits prior to the commit "updated readme to plain python"**.
 
 What I was able to get done was to import the data from s3, and to do some checking to ensure that
-the columns were of the right type.
+the columns were of the right type. With more time I would have completed more data validation
+like checking for negative values, and aggregations such as those listed in the final section of this readme.
 
 
 ### S3 to pandas:
+
+I stored the loan.csv and LCDataDictionary.xlsx in an s3 bucket. To access the s3 bucket
+I had to use AWS credentials which are stored in a configuration file (config.json) that is
+hidden from the github repository with .gitignore.
 I was able to extract the csv and data dictionary from s3 and read them into pandas dataframes
 where I planned to do data validation and aggregation.
 If I were to implement a autonomous pipeline I would have used Airflow to read the
@@ -83,6 +94,11 @@ A list of all of the python dependencies I used to complete this project can be 
 requirements.txt file within the main directory of this repository.
 
 ## Redshift setup:
+
+Although I did not get to insert the data into redshift, I would have used it because it is a
+columnar store database. This is ideal for this dataset since there are many rows, and because
+it cannot be split into smaller tables because the unique identifier member_id has been
+removed from the dataset.
 
 I setup Redshift by following the instructions found (here)[https://docs.aws.amazon.com/redshift/latest/gsg/getting-started.html].
 I had to create a IAM Role specifically for redshift which is covered in step 2.
@@ -97,7 +113,7 @@ inbound rules as follows:
 | All traffic | <spark-security-group> | self |
 
 With more time I would included methods within my loan_processor.py module to
-write one large table in Redshift. Additionally I would have done some aggregations
+write the majority of the data into one large table in Redshift. Additionally I would have done some aggregations
 on the data and stored those aggregations in separate tables.
 
 ## Aggregations:
