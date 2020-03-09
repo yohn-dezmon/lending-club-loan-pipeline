@@ -37,6 +37,8 @@ PostgreSQL, however after realizing that there was no unique id, I decided that 
 make more sense to store the entire dataset in a single table in a NoSQL/Columnar database
 like Amazon Redshift.
 
+For more information on the Exploratory Data Analysis, please see the jupyter notebook,
+as it has markup comments to describe the code that I have run.
 
 ## Main Findings:
 
@@ -62,7 +64,7 @@ I initially planned to use Apache Spark with Java on a 3 Node EC2 cluster to com
 I also tried out PySpark and found it to be similar to the Java spark applications I've run in the past,
 however I also ran into issues when attempting to run the PySpark application on my EC2 instance.
 
-Thus I decided ultimately to complete the processing using pandas in Python. To see the instructions I wrote on how to set up the AWS computing cluster, please see my commits prior to the commit "updated readme to plain python".
+Thus I decided ultimately to complete the processing using pandas in Python. To see the instructions I wrote on how to set up the AWS computing cluster, **please see my commits prior to the commit "updated readme to plain python"**.
 
 What I was able to get done was to import the data from s3, and to do some checking to ensure that
 the columns were of the right type.

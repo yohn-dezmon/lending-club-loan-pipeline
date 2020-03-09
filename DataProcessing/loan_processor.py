@@ -5,16 +5,16 @@ import json
 import xlrd
 import os
 from collections import defaultdict
-# import pdb
 
 
 class LoanProcessor(object):
+    """A class to validate the data from the loan dataset before ingesting into Redshift."""
 
     def __init__(self):
         pass
 
     def get_config_data(self):
-        """Get configuration data for s3 and AWS"""
+        """Get configuration data for s3 and AWS."""
         try:
             with open('config.json') as json_data_file:
                 try:
@@ -30,8 +30,6 @@ class LoanProcessor(object):
     def datadict_from_s3(self, configs):
         """Method to import datadict into a pandas dataframe.
         """
-
-
         try:
             df = pd.read_excel("s3a://%s" % (configs['dictURL']))
         except xlrd.XLRDError as xlrderr:
@@ -47,17 +45,14 @@ class LoanProcessor(object):
             return df
 
     def loan_chunk_process(self, loan_chunk, mapOfTypes):
-        """Process each chunk of 500000 rows"""
+        """Process the large loan.csv file."""
 
-        blnklist = []
-
-        # check the chunk to see if it has the correct number of columns
+        # check the dataframe to see if it has the correct number of columns
         shape = loan_chunk.shape
         if shape[1] != 145:
             print("Incorrect number of columns")
 
         # Type Checking
-
         map = defaultdict(list)
         # loan_chunk.dtypes is a Series
         for index,typ in loan_chunk.dtypes.items():
@@ -100,20 +95,17 @@ class LoanProcessor(object):
 
     def loan_dataset_s3(self, configs, mapOfTypes):
         """Method to import loan.csv dataset"""
-        loan_chunk_list = []
         try:
             # read data into df as pandas chunk object of 500000 rows
             loan_large_csv = pd.read_csv("s3a://%s" % (configs['loanURL']))
-
 
         except TypeError as bads3path:
             """ When an incorrect path is given. """
             print("bad s3 path: "+str(bads3path))
         else:
             print(loan_large_csv.head())
+            self.loan_chunk_process(loan_large_csv, mapOfTypes)
             return loan_large_csv
-
-
 
 
     def split_date_column(self, configs):
@@ -121,16 +113,11 @@ class LoanProcessor(object):
         month columns"""
         pass
 
-    """
-    This code was used to test connection to s3 using boto3
-    def connect_to_s3(self):
-        s3 = boto3.resource('s3')
-        for bucket in s3.buckets.all():
-            print(bucket.name)
-    """
+
 
     def main(self):
         mapOfTypes = self.get_lists_of_types()
+        # get aws and s3 configuration values
         configs = self.get_config_data()
         # get data dictionary and loan dataset
         data_dict_df = self.datadict_from_s3(configs)
@@ -138,18 +125,13 @@ class LoanProcessor(object):
 
 
 
-
-
-
-
 if __name__ == '__main__':
 
     loanProcessor = LoanProcessor()
 
-    """if len(argv) == 4:
-        input = argv[1]
-        inactiv_period = argv[2]
-        output = argv[3]
+    """if len(argv) == 2:
+        input = argv[0]
+        output = argv[1]
         try:
             os.remove(output)
         except:
@@ -158,5 +140,4 @@ if __name__ == '__main__':
         raise IncorrectCommandLine(argv)"""
 
 
-# input, inactiv_period, output
     loanProcessor.main()
