@@ -9,15 +9,16 @@
 
 
 ## Purpose:
-The purpose of this project is to (1) explore the (lending club loan dataset)[https://www.kaggle.com/wendykan/lending-club-loan-data] from kaggle to extract the important
-features for data analysis and (2) to create a pipeline that would ingest, process,
-and store this data on a periodic basis to be placed into storage such that it could be easily accessed by a data warehouse application, or to be used for machine learning model creation.
+The purpose of this project was to:
+1. Explore the [lending club loan dataset](https://www.kaggle.com/wendykan/lending-club-loan-data) from kaggle to extract the important
+features for data analysis.
+2. Create a pipeline that would ingest, process, and store this data on a periodic basis to be placed into storage such that it could be easily accessed by a data warehouse application, or to be used for machine learning model creation.
 
 ## Data Exploration:
 
 ### Assumptions:
 
-One of my main assumptions was that I didn't want to throw away any data in case it was of use to analysts further down the pipeline. Thus my aim in exploration was to characterize the data and understand where there may be problematic data.
+One of my assumptions was that no data should be thrown away in case it is of use to analysts further down the pipeline. Thus, my aim in exploration was to characterize the data and understand where there may be problematic data.
 
 ### Jupyter Notebook:
 
@@ -31,7 +32,8 @@ accessed their paths by using a configuration file: DataExploration/config.json.
 To explore the dataset I observed various features. To begin I started by printing the
 columns in both the data dictionary and the dataset itself, and by reading the meaning of
 each of the 145 columns. From there I observed the shape of the data dictionary and
-the dataset, and found that there were several columns present in the data dictionary
+the dataset, and found that there were several columns present in the data dictionary that were not present
+in the loan.csv dataset.
 
 One of my first observations was that the id and member_id columns were null. I was initially
 planning to normalize the dataset into a relational model within a relational database like
@@ -84,7 +86,7 @@ I had to use AWS credentials which are stored in a configuration file (config.js
 hidden from the github repository with .gitignore.
 I was able to extract the csv and data dictionary from s3 and read them into pandas dataframes
 where I planned to do data validation and aggregation.
-If I were to implement a autonomous pipeline I would have used Airflow to read the
+If I were to implement an autonomous pipeline I would have used Airflow to read the
 data from s3 into load_processor.py every time a new file was placed into the s3 bucket.
 
 
@@ -100,8 +102,8 @@ columnar store database. This is ideal for this dataset since there are many row
 it cannot be split into smaller tables because the unique identifier member_id has been
 removed from the dataset.
 
-I setup Redshift by following the instructions found (here)[https://docs.aws.amazon.com/redshift/latest/gsg/getting-started.html].
-I had to create a IAM Role specifically for redshift which is covered in step 2.
+I setup Redshift by following the instructions found [here](https://docs.aws.amazon.com/redshift/latest/gsg/getting-started.html).
+I had to create an IAM Role specifically for redshift which is covered in step 2.
 To connect to Redshift from my local computer, I had to modify the security group's
 inbound rules as follows:
 
@@ -112,7 +114,7 @@ inbound rules as follows:
 | Redshift | <local-ip> | local-ip |
 | All traffic | <spark-security-group> | self |
 
-With more time I would included methods within my loan_processor.py module to
+With more time I would have included methods within my loan_processor.py module to
 write the majority of the data into one large table in Redshift. Additionally I would have done some aggregations
 on the data and stored those aggregations in separate tables.
 
