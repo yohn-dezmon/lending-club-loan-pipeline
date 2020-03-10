@@ -57,8 +57,8 @@ machine learning applications could easily use the categorical data for their al
 
 ![Loan Amount Cumulative Sum](ScreenShots/LoanAmtCumSum.png)
 
-Here we can see that the cumulative sum of loans given to borrowers on the platform is increasing
-exponentially with time.
+Here we can see that the cumulative sum of loans given to borrowers on the platform is increasing nearly
+exponentially with time. The y-axis is in billions of dollars. 
 
 ## Data Processing:
 
